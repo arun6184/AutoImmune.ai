@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Login - ImmuniFlare</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            height: 100vh;
+            background-image: url('https://arkca.com/assets/img/login.gif');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+        .login-container {
+            background-color: rgba(0, 0, 0, 0.65); /* dark overlay */
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.7);
+            width: 320px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 25px;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        input[type="submit"] {
+            background-color: #2575fc;
+            border: none;
+            padding: 12px 20px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            color: white;
+            font-weight: bold;
+            width: 100%;
+        }
+        input[type="submit"]:hover {
+            background-color: #175ac7;
+        }
+        .message {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #ff6b6b;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form action="/login" method="post">
+            <input type="text" name="username" placeholder="Username" required />
+            <input type="password" name="password" placeholder="Password" required />
+            <input type="submit" value="Login" />
+        </form>
+        {% if message %}
+            <div class="message">{{ message }}</div>
+        {% endif %}
+    </div>
+</body>
+</html>

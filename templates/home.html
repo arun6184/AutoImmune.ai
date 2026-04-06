@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Disease Prediction Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --danger: #e63946;
+            --danger-dark: #d62828;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --hover-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background:
+              linear-gradient(135deg, #f5f7fa 0%, #e4edf9 100%), /* existing gradient */
+              url('https://i.pinimg.com/originals/a6/be/29/a6be2977e1858b5b999774350c2eda58.gif') no-repeat center center fixed; /* background image */
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--dark);
+            position: relative;
+        }
+        
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .logo i {
+            margin-right: 12px;
+            font-size: 1.8rem;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-right: 12px;
+        }
+        
+        .user-name {
+            font-weight: 500;
+            margin-right: 15px;
+        }
+        
+        /* Main Content */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .dashboard-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .dashboard-title h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+        
+        .dashboard-title p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* Cards Container */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+        
+        /* Card */
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--hover-shadow);
+        }
+        
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(67, 97, 238, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            color: var(--primary);
+            font-size: 2rem;
+        }
+        
+        .card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .card p {
+            color: var(--gray);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .card-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            margin-top: auto;
+        }
+        
+        .card-btn i {
+            margin-left: 10px;
+        }
+        
+        .card-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+        
+        /* Logout Button */
+        .logout-container {
+            margin-top: 20px;
+        }
+        
+        .logout-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        
+        .logout-btn i {
+            margin-right: 10px;
+        }
+        
+        .logout-btn:hover {
+            background: var(--danger-dark);
+            transform: translateY(-3px);
+        }
+        
+        /* Footer */
+        footer {
+            background: white;
+            padding: 20px 0;
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-title h1 {
+                font-size: 2.2rem;
+            }
+            
+            .dashboard-title p {
+                font-size: 1rem;
+            }
+            
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-dna"></i>
+                <span>MediPredict AI</span>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">U</div>
+                <span class="user-name">User Name</span>
+                <a href="/logout" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <div class="dashboard-title">
+            <h1>Disease Prediction System</h1>
+            <p>Advanced AI-powered tools for early disease detection and health risk assessment</p>
+        </div>
+        
+        <div class="cards-container">
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-vial"></i>
+                </div>
+                <h3>Clinical Lab Analysis</h3>
+                <p>Predict diseases based on comprehensive clinical laboratory data including blood tests, biomarkers, and other diagnostic results.</p>
+                <a href="/clinical" class="card-btn">
+                    Analyze Lab Data
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-stethoscope"></i>
+                </div>
+                <h3>Symptom Assessment</h3>
+                <p>Get preliminary disease predictions by entering your symptoms and medical history for AI-powered analysis.</p>
+                <a href="/symptom_predict" class="card-btn">
+                    Enter Symptoms
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 MediPredict AI. All rights reserved. | Privacy Policy | Terms of Service</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Disease Prediction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --success: #4caf50;
+            --danger: #e63946;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .form-container {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #444;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn-secondary {
+            background: var(--light-gray);
+            color: var(--gray);
+        }
+        
+        .btn-secondary:hover {
+            background: #ddd;
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .result-container {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+            display: none;
+        }
+        
+        .result-container.active {
+            display: block;
+        }
+        
+        .result-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .result-header h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--success);
+            margin-bottom: 10px;
+        }
+        
+        .result-header p {
+            color: var(--gray);
+        }
+        
+        .suggestion-box {
+            background: #f8fff8;
+            border-left: 5px solid var(--success);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .suggestion-box h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--success);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .suggestion-box h3 i {
+            margin-right: 10px;
+        }
+        
+        .suggestion-box p {
+            color: #444;
+            line-height: 1.7;
+        }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 20px;
+            transition: color 0.3s;
+        }
+        
+        .back-btn:hover {
+            color: var(--primary-dark);
+        }
+        
+        .back-btn i {
+            margin-right: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Clinical Disease Prediction</h1>
+            <p>Enter patient clinical data to predict potential autoimmune disorders</p>
+        </div>
+        
+        <div class="form-container">
+            <form method="post" action="/predict_clinical">
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-user-injured"></i>
+                        Patient Information
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="id">Patient ID</label>
+                            <input type="number" id="id" name="id" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="number" id="age" name="age" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender" name="gender">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sickness_duration">Sickness Duration (Months)</label>
+                            <input type="number" id="sickness_duration" name="sickness_duration" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-vial"></i>
+                        Hematology
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="rbc_count">RBC Count</label>
+                            <input type="number" step="0.01" id="rbc_count" name="rbc_count" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="hemoglobin">Hemoglobin</label>
+                            <input type="number" step="0.01" id="hemoglobin" name="hemoglobin" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="hematocrit">Hematocrit</label>
+                            <input type="number" step="0.01" id="hematocrit" name="hematocrit" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mcv">MCV</label>
+                            <input type="number" step="0.01" id="mcv" name="mcv" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mch">MCH</label>
+                            <input type="number" step="0.01" id="mch" name="mch" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mchc">MCHC</label>
+                            <input type="number" step="0.01" id="mchc" name="mchc" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rdw">RDW</label>
+                            <input type="number" step="0.01" id="rdw" name="rdw" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reticulocyte_count">Reticulocyte Count</label>
+                            <input type="number" step="0.01" id="reticulocyte_count" name="reticulocyte_count" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="wbc_count">WBC Count</label>
+                            <input type="number" step="0.01" id="wbc_count" name="wbc_count" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="neutrophils">Neutrophils</label>
+                            <input type="number" step="0.01" id="neutrophils" name="neutrophils" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lymphocytes">Lymphocytes</label>
+                            <input type="number" step="0.01" id="lymphocytes" name="lymphocytes" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="monocytes">Monocytes</label>
+                            <input type="number" step="0.01" id="monocytes" name="monocytes" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="eosinophils">Eosinophils</label>
+                            <input type="number" step="0.01" id="eosinophils" name="eosinophils" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="basophils">Basophils</label>
+                            <input type="number" step="0.01" id="basophils" name="basophils" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="plt_count">PLT Count</label>
+                            <input type="number" step="0.01" id="plt_count" name="plt_count" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mpv">MPV</label>
+                            <input type="number" step="0.01" id="mpv" name="mpv" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-microscope"></i>
+                        Immunology & Biochemistry
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="ana">ANA</label>
+                            <input type="number" step="0.01" id="ana" name="ana" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="esbach">Esbach</label>
+                            <input type="number" step="0.01" id="esbach" name="esbach" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mbl_level">MBL Level</label>
+                            <input type="number" step="0.01" id="mbl_level" name="mbl_level" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="esr">ESR</label>
+                            <input type="number" step="0.01" id="esr" name="esr" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="c3">C3</label>
+                            <input type="number" step="0.01" id="c3" name="c3" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="c4">C4</label>
+                            <input type="number" step="0.01" id="c4" name="c4" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="crp">CRP</label>
+                            <input type="number" step="0.01" id="crp" name="crp" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="btn-container">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-calculator"></i>
+                        Predict Disease
+                    </button>
+                    <a href="/" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Dashboard
+                    </a>
+                </div>
+            </form>
+        </div>
+        
+        {% if prediction %}
+        <div class="result-container active">
+            <div class="result-header">
+                <h2>Prediction Result</h2>
+                <p>Based on the provided clinical data</p>
+            </div>
+            
+            <h3>{{ prediction }}</h3>
+            
+            <div class="suggestion-box">
+                <h3><i class="fas fa-lightbulb"></i> Suggested Precautions / Solutions</h3>
+                <p>{{ suggestion }}</p>
+            </div>
+            
+            <a href="/" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

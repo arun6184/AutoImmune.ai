@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptom-Based Flare Prediction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --success: #4caf50;
+            --danger: #e63946;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 30px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #444;
+        }
+        
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-upload input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-upload-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            border: 2px dashed var(--primary);
+            border-radius: 12px;
+            background-color: rgba(67, 97, 238, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload-label:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+            border-color: var(--primary-dark);
+        }
+        
+        .file-upload-label i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .file-upload-label p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+        
+        .file-upload-label span {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn-secondary {
+            background: var(--light-gray);
+            color: var(--gray);
+        }
+        
+        .btn-secondary:hover {
+            background: #ddd;
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .clinical-note {
+            margin-top: 30px;
+        }
+        
+        .clinical-note h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .clinical-note h3 i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+        
+        .clinical-note textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            resize: vertical;
+            background-color: #f9f9f9;
+            color: #444;
+        }
+        
+        .result-container {
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .result-container.active {
+            display: block;
+        }
+        
+        .result-card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--success);
+        }
+        
+        .result-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .result-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(76, 175, 80, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        
+        .result-icon i {
+            font-size: 1.5rem;
+            color: var(--success);
+        }
+        
+        .result-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--success);
+        }
+        
+        .result-content {
+            font-size: 1.1rem;
+            color: #444;
+            margin-bottom: 20px;
+        }
+        
+        .suggestion-box {
+            background: #f8fff8;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .suggestion-box h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--success);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .suggestion-box h3 i {
+            margin-right: 10px;
+        }
+        
+        .suggestion-box p {
+            color: #444;
+            line-height: 1.7;
+        }
+        
+        .error-container {
+            background: #fff5f5;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 5px solid var(--danger);
+            display: none;
+        }
+        
+        .error-container.active {
+            display: block;
+        }
+        
+        .error-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .error-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(230, 57, 70, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        
+        .error-icon i {
+            font-size: 1.2rem;
+            color: var(--danger);
+        }
+        
+        .error-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--danger);
+        }
+        
+        .error-message {
+            color: #444;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 20px;
+            transition: color 0.3s;
+        }
+        
+        .back-link:hover {
+            color: var(--primary-dark);
+        }
+        
+        .back-link i {
+            margin-right: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 25px;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Symptom-Based Flare Prediction</h1>
+            <p>Upload a clinical note file to predict potential autoimmune disorder flares</p>
+        </div>
+        
+        <div class="card">
+            <form method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>Select a text file containing clinical notes:</label>
+                    <div class="file-upload">
+                        <input type="file" name="note_file" accept=".txt" required id="file-input">
+                        <label for="file-input" class="file-upload-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Click to upload or drag and drop</p>
+                            <p><strong>Text files (.txt)</strong> only</p>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="btn-container">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-magic"></i>
+                        Predict Flare
+                    </button>
+                    <a href="/" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Dashboard
+                    </a>
+                </div>
+            </form>
+            
+            {% if note %}
+            <div class="clinical-note">
+                <h3><i class="fas fa-file-medical"></i> Clinical Note</h3>
+                <textarea readonly>{{ note }}</textarea>
+            </div>
+            {% endif %}
+        </div>
+        
+        {% if prediction %}
+        <div class="result-container active">
+            <div class="result-card">
+                <div class="result-header">
+                    <div class="result-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2 class="result-title">Prediction Result</h2>
+                </div>
+                <div class="result-content">
+                    {{ prediction }}
+                </div>
+                <div class="suggestion-box">
+                    <h3><i class="fas fa-lightbulb"></i> Suggested Precautions / Solutions</h3>
+                    <p>{{ suggestion }}</p>
+                </div>
+            </div>
+            <a href="/" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </div>
+        {% endif %}
+        
+        {% if error %}
+        <div class="error-container active">
+            <div class="error-header">
+                <div class="error-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3 class="error-title">Error</h3>
+            </div>
+            <div class="error-message">
+                {{ error }}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    
+    <script>
+        // Update the file upload label when a file is selected
+        document.getElementById('file-input').addEventListener('change', function() {
+            const fileName = this.files[0]?.name || 'Click to upload or drag and drop';
+            const label = document.querySelector('.file-upload-label p');
+            label.textContent = fileName;
+        });
+    </script>
+</body>
+</html>
